@@ -77,7 +77,6 @@ type GeneralChunk_schema = {
 }
 
 class InterpretChunks_Step extends PureStep<Chunk_schema[], Array<GeneralChunk_schema>> {
-	protected lost!: never
 	forward(input: Chunk_schema[]): GeneralChunk_schema[] {
 		return input.map(({ kind, data }): GeneralChunk_schema => {
 			const input_payload = { bin: data, pos: 0, args: {} } as any
@@ -210,7 +209,6 @@ class File_Step extends BinaryRecordStep<File_schema> {
 }
 
 class PNG_Codec_Step extends PureStep<Uint8Array, GeneralChunk_schema[]> {
-	lost!: never
 	forward(input: Uint8Array): GeneralChunk_schema[] {
 		const file_schema = (new File_Step).forward({ bin: input, pos: 0, args: {} })
 		return (new InterpretChunks_Step).forward(file_schema.val.chunks)

@@ -11,7 +11,7 @@ export class BinaryArrayStep<
 	ITEM_ARGS extends Record<string, any> = (ITEM_STEP extends BinaryPureStep<OUT_ITEM, infer T> ? T : never)
 > extends BinaryPureStep<OUT_ITEM[], ArrayArgs<ITEM_ARGS>> {
 	protected readonly item_step: ITEM_STEP
-	protected lost!: never
+
 	constructor(item_step: ITEM_STEP) {
 		super()
 		this.item_step = item_step
@@ -89,7 +89,7 @@ export class BinaryHeaderLengthedStep<
 > {
 	protected readonly head_step: HEAD_STEP
 	protected readonly body_step: BODY_STEP
-	protected lost!: never
+
 	constructor(head_step: HEAD_STEP, body_step: BODY_STEP) {
 		super()
 		this.head_step = head_step
@@ -139,7 +139,6 @@ export class BinaryRecordStep<
 > extends BinaryPureStep<RECORD, RecordArgs<ENTRY_ARGS>> {
 	// protected readonly entry_steps: ObjectFromEntries<Array<ENTRY_TYPE & [string, unknown]>>
 	protected readonly entry_steps: Array<ENTRY_TYPE>
-	protected lost!: never
 
 	constructor(entries: Array<ENTRY_TYPE>) {
 		super()
@@ -198,7 +197,6 @@ export class SequentialSteps<
 	STEPS extends [first: FIRST, ...intermediate_steps: PureStep<any, any>[], last: LAST] = [first: FIRST, ...intermediate_steps: PureStep<any, any>[], last: LAST],
 > extends PureStep<FROM, TO> {
 	protected readonly steps: STEPS
-	protected lost!: never
 
 	constructor(...steps: STEPS) {
 		super()

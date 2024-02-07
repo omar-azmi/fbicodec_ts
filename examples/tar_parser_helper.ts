@@ -16,8 +16,6 @@ const trimEnd = (txt: string, padding_char: string = "\x00"): string => {
 }
 
 export class FixedLengthString_Step extends BinaryPureStep<string> {
-	protected lost!: never
-
 	constructor(
 		protected readonly length: number,
 		protected readonly padding_char: string = "\x00",
@@ -47,8 +45,6 @@ export class FixedLengthString_Step extends BinaryPureStep<string> {
 }
 
 export class IntegerString_Step extends PureStep<string, number> {
-	protected lost!: never
-
 	constructor(protected readonly radix: number = 10) { super() }
 	forward(input: string): number {
 		const value = number_parseInt(trimEnd(input, "\x00"), this.radix)

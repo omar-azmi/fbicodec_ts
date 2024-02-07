@@ -3,7 +3,6 @@ import { BinaryInput, BinaryLengthedDataPureStep, BinaryOutput, BinaryPureStep, 
 
 
 export class BinaryCStringStep extends BinaryPureStep<string, never> {
-	protected lost!: never
 	forward(input: BinaryInput<never>): BinaryOutput<string> {
 		const
 			{ bin, pos } = input,
@@ -20,7 +19,6 @@ export class BinaryCStringStep extends BinaryPureStep<string, never> {
 export class BinaryNumberStep<ENCODING extends NumericType> extends BinaryPureStep<number, never> {
 	// TODO: later on, add support for the variable sized numeric types `"iv"` and `"uv"`
 	protected readonly kind: ENCODING
-	protected lost!: never
 	constructor(kind: ENCODING) {
 		super()
 		this.kind = kind
@@ -39,7 +37,6 @@ export class BinaryNumberStep<ENCODING extends NumericType> extends BinaryPureSt
 
 
 export class BinaryStringStep extends BinaryLengthedDataPureStep<string> {
-	protected lost!: never
 	forward(input: BinaryInput<LengthedArgs>): BinaryOutput<string> {
 		const
 			{ bin, pos, args: { length: str_length } } = input,
@@ -58,7 +55,6 @@ export class BinaryStringStep extends BinaryLengthedDataPureStep<string> {
 export class BinaryNumberArrayStep<ENCODING extends NumericType> extends BinaryLengthedDataPureStep<number[]> {
 	// TODO: later on, add support for the variable sized numeric types `"iv"` and `"uv"`
 	protected readonly kind: ENCODING
-	protected lost!: never
 	constructor(kind: ENCODING) {
 		super()
 		this.kind = kind
@@ -80,7 +76,6 @@ export class BinaryNumberArrayStep<ENCODING extends NumericType> extends BinaryL
 
 
 export class BinaryBytesStep extends BinaryLengthedDataPureStep<Uint8Array> {
-	protected lost!: never
 	forward(input: BinaryInput<LengthedArgs>): BinaryOutput<Uint8Array> {
 		const
 			{ bin, pos, args: { length: bytes_length } } = input,
@@ -106,7 +101,6 @@ export class BinaryDefaultArgs<
 	protected readonly step: STEP
 	protected readonly args: DEFAULT_ARGS
 	protected readonly priority: -1 | 1
-	protected lost!: never
 
 	constructor(step: STEP, default_args: DEFAULT_ARGS, priority: -1 | 1 = 1) {
 		super()
@@ -130,7 +124,6 @@ export class BinaryDefaultArgs<
 
 
 export class BinaryOutputUnwrapStep<T> extends PureStep<Omit<BinaryOutput<T>, "len">, T> {
-	protected lost!: never
 	forward(input: BinaryOutput<T>): T { return input.val }
 	backward(input: T): Omit<BinaryOutput<T>, "len"> { return { val: input } }
 }
@@ -139,21 +132,18 @@ export class BinaryOutputUnwrapStep<T> extends PureStep<Omit<BinaryOutput<T>, "l
 // TODO: add a warning about forward method's `output.len === undefined`, as it might ruin accumulated
 // size computation, and will be hard to debug and come across this as being the culprit
 export class BinaryOutputWrapStep<T> extends PureStep<T, BinaryOutput<T>> {
-	protected lost!: never
 	forward(input: T): BinaryOutput<T> { return { val: input, len: undefined as any } }
 	backward(input: BinaryOutput<T>): T { return input.val }
 }
 
 
 export class BinaryInputUnwrapStep extends PureStep<BinaryInput, Uint8Array> {
-	protected lost!: never
 	forward(input: BinaryInput): Uint8Array { return input.bin }
 	backward(input: Uint8Array): BinaryInput { return { bin: input, pos: 0, args: undefined } }
 }
 
 
 export class BinaryInputWrapStep extends PureStep<Uint8Array, BinaryInput> {
-	protected lost!: never
 	forward(input: Uint8Array): BinaryInput { return { bin: input, pos: 0, args: undefined } }
 	backward(input: BinaryInput): Uint8Array { return input.bin }
 }

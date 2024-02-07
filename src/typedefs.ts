@@ -134,7 +134,7 @@ export abstract class Step<FROM, TO, LOST = any> {
  * - we may reuse the same instance of a pure step for many forward and backward transformations, however many times we want, in any order we want.
 */
 export abstract class PureStep<FROM, TO> extends Step<FROM, TO, never> {
-	protected abstract lost: never
+	protected lost!: never
 }
 
 
@@ -192,7 +192,7 @@ export abstract class BinaryStep<
  * @typeParam ARGS the input argument interface needed for decoding in the {@link forward | `forward`} method (could be empty)
 */
 export abstract class BinaryPureStep<OUT, ARGS = any> extends PureStep<BinaryInput<ARGS>, BinaryOutput<OUT>> implements BinaryStep<OUT, ARGS, never>{
-	protected abstract lost: never
+	declare protected lost: never
 	/** @inheritdoc
 	 * the backward transformation in the `BinaryStep` is defined so that it is not reliant the decoded object's original bytelength {@link BinaryOutput["len"] | `len`} member.
 	*/
