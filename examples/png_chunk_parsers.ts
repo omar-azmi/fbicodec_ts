@@ -1,6 +1,6 @@
 import { BinaryArrayStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
 import { BinaryBytesStep, BinaryCStringStep, BinaryDefaultArgs, BinaryNumberArrayStep, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
-import { BinaryInput, BinaryOutput } from "../src/typedefs.ts"
+import { BinaryInput, BinaryOutput, LengthedArgs } from "../src/typedefs.ts"
 
 export type ChunkData_schema =
 	| IDAT_schema | IHDR_schema | PLTE_schema | cHRM_schema | gAMA_schema
@@ -91,7 +91,7 @@ export type tEXt_schema = {
 	field: string
 	text: string
 }
-export const tEXt_step = new BinaryRecordStep<tEXt_schema>([
+export const tEXt_step = new BinaryRecordStep<tEXt_schema, { text: LengthedArgs }>([
 	["field", new BinaryCStringStep()],
 	["text", new BinaryStringStep()],
 ])
@@ -118,7 +118,7 @@ export type zTXt_schema = {
 	method: 0
 	data: Uint8Array
 }
-export const zTXt_step = new BinaryRecordStep<zTXt_schema>([
+export const zTXt_step = new BinaryRecordStep<zTXt_schema, { data: LengthedArgs }>([
 	["field", new BinaryCStringStep()],
 	["method", new BinaryNumberStep("u1") as any],
 	["data", new BinaryBytesStep()],

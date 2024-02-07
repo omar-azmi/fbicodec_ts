@@ -66,8 +66,23 @@ class AllChunks_Step extends BinaryArrayStep<Chunk_Step> {
 			const { val, len } = super.next_forward(bin, pos + bytelength, item_args)
 			bytelength += len
 			out_chunks.push(current_chunk = val)
-		} while (current_chunk.kind !== "IEND" && pos < bin_length)
+		} while (current_chunk.kind !== "IEND" && pos + bytelength < bin_length)
+		if (current_chunk.kind !== "IEND") {
+			console.warn("the final chunk was not an \"IEND\" chunk... abusive much??")
+		}
 		return { val: out_chunks, len: bytelength }
+	}
+	backward(input: Omit<BinaryOutput<Chunk_schema[]>, "len">): BinaryInput<ArrayArgs<Record<any, never>>> {
+		let chunks = input.val
+		if (chunks.at(-1)?.kind !== "IEND") {
+			console.warn("the final chunk was not an \"IEND\" chunk.", "\nnow adding the missing `IEND` chunk")
+			// first search for any existing IEND chunks, and kick them out
+			chunks = chunks.filter((chunk) => (chunk.kind !== "IEND"))
+			// now add an IEND chunk in the end
+			chunks.push({ byteLength: 0, kind: "IEND", data: new Uint8Array(), crc: 0 })
+		}
+		input.val = chunks
+		return super.backward(input)
 	}
 }
 
@@ -79,7 +94,7 @@ type GeneralChunk_schema = {
 class InterpretChunks_Step extends PureStep<Chunk_schema[], Array<GeneralChunk_schema>> {
 	forward(input: Chunk_schema[]): GeneralChunk_schema[] {
 		return input.map(({ kind, data }): GeneralChunk_schema => {
-			const input_payload = { bin: data, pos: 0, args: {} } as any
+			const input_payload = { bin: data, pos: 0, args: {} }
 			let interpreted_data: GeneralChunk_schema["data"]
 			switch (kind) {
 				case "IHDR": {
@@ -87,7 +102,7 @@ class InterpretChunks_Step extends PureStep<Chunk_schema[], Array<GeneralChunk_s
 					break
 				}
 				case "PLTE": {
-					interpreted_data = PLTE_step.forward(input_payload).val as PLTE_schema
+					interpreted_data = PLTE_step.forward({ ...input_payload, args: { length: -1, item: {} } }).val as PLTE_schema
 					break
 				}
 				case "pHYs": {
@@ -99,15 +114,15 @@ class InterpretChunks_Step extends PureStep<Chunk_schema[], Array<GeneralChunk_s
 					break
 				}
 				case "gAMA": {
-					interpreted_data = gAMA_step.forward(input_payload).val
+					interpreted_data = gAMA_step.forward(input_payload as any).val
 					break
 				}
 				case "hIST": {
-					interpreted_data = hIST_step.forward(input_payload).val as hIST_schema
+					interpreted_data = hIST_step.forward({ ...input_payload, args: { length: -1, item: {} } }).val as hIST_schema
 					break
 				}
 				case "tEXt": {
-					interpreted_data = tEXt_step.forward(input_payload).val
+					interpreted_data = tEXt_step.forward({ ...input_payload, args: { text: { length: -1 } } }).val
 					break
 				}
 				case "tIME": {
@@ -115,7 +130,7 @@ class InterpretChunks_Step extends PureStep<Chunk_schema[], Array<GeneralChunk_s
 					break
 				}
 				case "zTXt": {
-					interpreted_data = zTXt_step.forward(input_payload).val
+					interpreted_data = zTXt_step.forward({ ...input_payload, args: { data: { length: -1 } } }).val
 					break
 				}
 				case "bKGD":
