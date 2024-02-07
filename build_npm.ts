@@ -32,7 +32,7 @@ await build({
 	package: {
 		...package_json
 	},
-	compilerOptions: {...tsconfig_json.compilerOptions, target: "Latest"},
+	compilerOptions: { ...tsconfig_json.compilerOptions, target: "Latest" },
 	typeCheck: false,
 	declaration: "inline",
 	esModule: true,

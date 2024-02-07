@@ -1,4 +1,4 @@
-import { BinaryArrayStep, BinaryHeaderLengthedStep, BinaryRecordStep, RecordArgs, ArrayArgs } from "./binary_composition_steps.ts"
+import { ArrayArgs, BinaryArrayStep, BinaryHeaderLengthedStep, BinaryRecordStep, RecordArgs } from "./binary_composition_steps.ts"
 import { BinaryCStringStep, BinaryNumberArrayStep, BinaryNumberStep, BinaryStringStep } from "./binary_primitive_steps.ts"
 import { LengthedArgs } from "./typedefs.ts"
 

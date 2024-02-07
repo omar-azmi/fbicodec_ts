@@ -13,27 +13,9 @@ import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.1/mod.t
 
 export const mainEntrypoint: string = "./src/mod.ts"
 export const subEntrypoints: string[] = [
-	"./src/array2d.ts",
-	"./src/binder.ts",
-	"./src/browser.ts",
-	"./src/builtin_aliases_deps.ts",
-	"./src/builtin_aliases.ts",
-	"./src/collections.ts",
-	"./src/crypto.ts",
-	"./src/devdebug.ts",
-	"./src/dotkeypath.ts",
-	"./src/eightpack.ts",
-	"./src/eightpack_varint.ts",
-	"./src/formattable.ts",
-	"./src/image.ts",
-	"./src/lambda.ts",
-	"./src/lambdacalc.ts",
-	"./src/mapper.ts",
-	"./src/numericarray.ts",
-	"./src/numericmethods.ts",
-	"./src/stringman.ts",
-	"./src/struct.ts",
-	"./src/typedbuffer.ts",
+	"./src/binary_composition_steps.ts",
+	"./src/binary_conditional_steps.ts",
+	"./src/binary_primitive_steps.ts",
 	"./src/typedefs.ts",
 ]
 
@@ -155,7 +137,7 @@ export const doubleCompileFiles = async (
 					...overrid_minify_options
 				})).code,
 				js_text_uint8 = (new TextEncoder()).encode(js_text)
-			console.log("bundled file", file_number, "\n\t" ,"output path:", path, "\n\t", "binary size:", js_text_uint8.byteLength / 1024, "kb")
+			console.log("bundled file", file_number, "\n\t", "output path:", path, "\n\t", "binary size:", js_text_uint8.byteLength / 1024, "kb")
 			return {
 				path,
 				text: js_text,

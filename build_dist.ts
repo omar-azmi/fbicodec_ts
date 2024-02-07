@@ -7,7 +7,7 @@ import { doubleCompileFiles } from "./build_tools.ts"
  * - `"./examples/${num}/${script}.ts"` for compiling an example
 */
 const
-	compile_file = Deno.args[0] ?? "./src/mod.ts",
+	compile_file = Deno.args[0] ?? "./src/main.ts",
 	out_dir = "./dist/"
 
 const output_files = await doubleCompileFiles(compile_file, out_dir,
