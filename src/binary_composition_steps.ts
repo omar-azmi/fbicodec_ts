@@ -1,5 +1,5 @@
-import { COMPILATION_MODE, compilation_mode, concatBytes, number_POSITIVE_INFINITY } from "./deps.ts"
-import { BinaryInput, BinaryOutput, BinaryPureStep, LengthedArgs, ObjectToEntries_Mapped, OptionalNeverKeys, PureStep } from "./typedefs.ts"
+import { COMPILATION_MODE, compilation_mode, concatBytes, number_NEGATIVE_INFINITY } from "./deps.ts"
+import { BinaryInput, BinaryLengthedDataPureStep, BinaryOutput, BinaryPureStep, LengthedArgs, ObjectToEntries_Mapped, OptionalNeverKeys, PureStep } from "./typedefs.ts"
 
 
 export interface ArrayArgs<ITEM_ARGS> extends LengthedArgs {
@@ -9,7 +9,7 @@ export class BinaryArrayStep<
 	ITEM_STEP extends BinaryPureStep<any, any>,
 	OUT_ITEM = (ITEM_STEP extends BinaryPureStep<infer T, unknown> ? T : never),
 	ITEM_ARGS extends Record<string, any> = (ITEM_STEP extends BinaryPureStep<OUT_ITEM, infer T> ? T : never)
-> extends BinaryPureStep<OUT_ITEM[], ArrayArgs<ITEM_ARGS>> {
+> extends BinaryPureStep<OUT_ITEM[], ArrayArgs<ITEM_ARGS>> implements BinaryLengthedDataPureStep {
 	protected readonly item_step: ITEM_STEP
 
 	constructor(item_step: ITEM_STEP) {
@@ -19,12 +19,13 @@ export class BinaryArrayStep<
 	forward(input: BinaryInput<ArrayArgs<ITEM_ARGS>>): BinaryOutput<OUT_ITEM[]> {
 		// TODO: move the functionality of infinitely parsing an array to a subclass of its own, where the `args.length` parameter becomes optional
 		const
-			{ bin, pos, args: { length = number_POSITIVE_INFINITY, item = {} as any } = {} } = input,
+			{ bin, pos, args: { length, item } } = input,
 			bin_length = bin.byteLength,
 			out_arr: OUT_ITEM[] = []
 		let
 			bytelength = 0,
-			i = 0
+			i = length < 0 ? number_NEGATIVE_INFINITY : 0
+		// a negative length will let the forward parsing continue until the end of the binary data is reached
 		while (i < length && pos + bytelength < bin_length) {
 			const { val, len } = this.next_forward(bin, pos + bytelength, item)
 			bytelength += len

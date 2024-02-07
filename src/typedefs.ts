@@ -199,20 +199,30 @@ export abstract class BinaryPureStep<OUT, ARGS = any> extends PureStep<BinaryInp
 	abstract backward(input: Omit<BinaryOutput<OUT>, "len">): BinaryInput<ARGS>
 }
 
-/** a commonly used argument interface in many data types with variable lengths (strings, arrays, arrays of arrays, etc...) */
-export type LengthedArgs = { length: number }
+/** a commonly used argument interface in many data types with variable lengths (strings, arrays, arrays of arrays, etc...). <br>
+ * when the `length` is set to `-1`, it should indicate that the `forward` parsing should be executed till the very end.
+ * no other negative number should be used besides `-1`. <br>
+ * furthermore, in the `backward`s transformation, a `length` argument that originally was `-1` will turn into the actual length of the object,
+ * rather than convert back into `-1`.
+*/
+export type LengthedArgs = { length: -1 | number }
 
 /** a binary step that has its input args extending the {@link LengthedArgs | `LengthedArgs`} interface.
  * in other words: `forward_input["args"] extends { length: number }`. <br>
- * it is particularly useful to define this subclass, as many of the binary step classes are composed of binary steps with the `length` argument parameter.
+ * this interface is particularly useful, as many of the binary step classes are composed of binary steps with the `length` argument parameter.
+ * see {@link BinaryLengthedDataPureStep | `BinaryLengthedDataPureStep`} for the pure step equivalent.
 */
-export abstract class BinaryLengthedDataStep<OUT, LOST = any> extends BinaryStep<OUT, LengthedArgs, LOST> { }
+export interface BinaryLengthedDataStep<OUT = any, LOST = any> extends BinaryStep<OUT, LengthedArgs, LOST> { }
 
 /** a pure binary step that has its input args extending the {@link LengthedArgs | `LengthedArgs`} interface.
- * see {@link BinaryLengthedDataStep | `BinaryLengthedDataStep`} for the complete description, and its usefulness.
+ * in other words: `forward_input["args"] extends { length: number }`. <br>
+ * this interface is particularly useful, as many of the binary step classes are composed of binary steps with the `length` argument parameter. <br>
+ * see {@link BinaryLengthedDataStep | `BinaryLengthedDataStep`} for the impure step equivalent.
 */
-export abstract class BinaryLengthedDataPureStep<OUT> extends BinaryPureStep<OUT, LengthedArgs> implements BinaryLengthedDataStep<OUT, never> { }
+export interface BinaryLengthedDataPureStep<OUT = any> extends BinaryPureStep<OUT, LengthedArgs> { }
 
+
+/////// Mapped utility types
 
 export type ObjectToEntries_Mapped<OBJ, HOTAlias extends keyof HOTKindMap<any> = "none"> = {
 	[K in keyof OBJ as number]: [K, ApplyHOT<HOTAlias, OBJ[K]>]

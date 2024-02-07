@@ -36,11 +36,11 @@ export class BinaryNumberStep<ENCODING extends NumericType> extends BinaryPureSt
 }
 
 
-export class BinaryStringStep extends BinaryLengthedDataPureStep<string> {
+export class BinaryStringStep extends BinaryPureStep<string, LengthedArgs> implements BinaryLengthedDataPureStep {
 	forward(input: BinaryInput<LengthedArgs>): BinaryOutput<string> {
 		const
 			{ bin, pos, args: { length: str_length } } = input,
-			[str, bytelength] = decode_str(bin, pos, str_length)
+			[str, bytelength] = decode_str(bin, pos, str_length >= 0 ? str_length : undefined)
 		return { val: str, len: bytelength }
 	}
 	backward(input: Omit<BinaryOutput<string>, "len">): BinaryInput<LengthedArgs> {
@@ -52,7 +52,7 @@ export class BinaryStringStep extends BinaryLengthedDataPureStep<string> {
 }
 
 
-export class BinaryNumberArrayStep<ENCODING extends NumericType> extends BinaryLengthedDataPureStep<number[]> {
+export class BinaryNumberArrayStep<ENCODING extends NumericType> extends BinaryPureStep<number[], LengthedArgs> implements BinaryLengthedDataPureStep {
 	// TODO: later on, add support for the variable sized numeric types `"iv"` and `"uv"`
 	protected readonly kind: ENCODING
 	constructor(kind: ENCODING) {
@@ -62,7 +62,7 @@ export class BinaryNumberArrayStep<ENCODING extends NumericType> extends BinaryL
 	forward(input: BinaryInput<LengthedArgs>): BinaryOutput<number[]> {
 		const
 			{ bin, pos, args: { length } } = input,
-			[arr, bytelength] = decode_number_array(bin, pos, this.kind + "[]" as NumericArrayType, length)
+			[arr, bytelength] = decode_number_array(bin, pos, this.kind + "[]" as NumericArrayType, length >= 0 ? length : undefined)
 		return { val: arr, len: bytelength }
 	}
 	backward(input: Omit<BinaryOutput<number[]>, "len">): BinaryInput<LengthedArgs> {
@@ -75,11 +75,11 @@ export class BinaryNumberArrayStep<ENCODING extends NumericType> extends BinaryL
 }
 
 
-export class BinaryBytesStep extends BinaryLengthedDataPureStep<Uint8Array> {
+export class BinaryBytesStep extends BinaryPureStep<Uint8Array, LengthedArgs> implements BinaryLengthedDataPureStep {
 	forward(input: BinaryInput<LengthedArgs>): BinaryOutput<Uint8Array> {
 		const
 			{ bin, pos, args: { length: bytes_length } } = input,
-			[bytes, bytelength] = decode_bytes(bin, pos, bytes_length)
+			[bytes, bytelength] = decode_bytes(bin, pos, bytes_length >= 0 ? bytes_length : undefined)
 		return { val: bytes, len: bytelength }
 	}
 	backward(input: Omit<BinaryOutput<Uint8Array>, "len">): BinaryInput<LengthedArgs> {
