@@ -205,7 +205,7 @@ class Tar_Codec_Step extends SequentialSteps<Uint8Array, Array<DirectoryEntry_st
 	constructor() {
 		super(
 			new BinaryInputWrapStep(),
-			new AllDirectoryEntries(),
+			new BinaryDefaultArgs(new AllDirectoryEntries(), { length: -1 }),
 			new BinaryOutputUnwrapStep(),
 		)
 	}
