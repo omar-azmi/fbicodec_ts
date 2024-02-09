@@ -1,20 +1,12 @@
 import { FileParser } from "https://deno.land/x/kitchensink_ts@v0.7.3/devdebug.ts"
-import { BinaryArrayStep } from "../src/binary_composition_steps.ts"
-import { BinaryDefaultArgs } from "../src/binary_primitive_steps.ts"
 import { AllOggPages, AllStreamPages } from "./ogg_page_parser.ts"
 import { OpusStream, Opus_type } from "./ogg_stream_parsers.ts"
 
-// class OggFile extends BinaryPureStep<> {
-// 	constructor() {
-// 		super(new OggBitstreamPages())
-// 	}
-// }
 
 const ogg_file_step = new AllOggPages()
 const ogg_streams_step = new AllStreamPages()
 const opus_stream_step = new OpusStream()
 
-// const ogg_page = new OggBitstreamPages()
 const file_step_adapter = {
 	encode: (value: Opus_type): Uint8Array => {
 		const first_stream = opus_stream_step.backward(value)

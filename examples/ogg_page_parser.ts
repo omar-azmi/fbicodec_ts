@@ -1,8 +1,7 @@
+import { sum } from "https://deno.land/x/kitchensink_ts@v0.7.3/numericmethods.ts"
 import { BinaryArrayStep, BinaryHeaderLengthedStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
 import { BinaryBytesStep, BinaryDefaultArgs, BinaryNumberArrayStep, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
-import { sum } from "https://deno.land/x/kitchensink_ts@v0.7.3/numericmethods.ts"
 import { BinaryInput, BinaryOutput, PureStep } from "../src/typedefs.ts"
-import { array_isEmpty } from "https://deno.land/x/kitchensink_ts@v0.7.3/builtin_aliases_deps.ts"
 
 /** see "header_type_flag" in following resource:
  * - [xiph.org](https://www.xiph.org/ogg/doc/framing.html#page_header)
@@ -151,16 +150,6 @@ export class AllStreamPages extends PureStep<BinaryOutput<OggPage_type[]>, AllSt
 	backward(input: AllStream_type): BinaryOutput<OggPage_type[]> {
 		const all_pages: OggPage_type[] = []
 		for (const [serial_number, stream_pages] of input) {
-			// ensure that the first and last pages of this stream have the correct flags on them (bos and eos, respectively)
-			// TODO: erase, as it is no longer relevant since I changed the `StreamPages_type` interface to include the "fresh" property
-			// if (!array_isEmpty(stream_pages)) {
-			// 	// TODO: I'm lazy, and so I don't warn if any of the middle pages have their bos and eos bitflags set (i.e I should've warned if `assert(flag & 0b110 === 0)` were untrue, had I not been lazy)
-			// 	if ((stream_pages.at(0)!.flag & 0b010) <= 0) { console.warn("stream's first page did not have its \"beginning-of-stream\" bit flag set", "\n\tserial_number:", serial_number) }
-			// 	if ((stream_pages.at(-1)!.flag & 0b100) <= 0) { console.warn("stream's last page did not have its \"end-of-stream\" bit flag set", "\n\tserial_number:", serial_number) }
-			// 	stream_pages.forEach((page) => (page.flag &= 0b001)) // here we only preserve every flag's continuation bitflag, while erasing all bos and eos bitflags
-			// 	stream_pages.at(0)!.flag = 0b010 // here we set the first page's bos to true, and set continuation bitflag to false (since the first page cannot be a continuation from a previous page)
-			// 	stream_pages.at(-1)!.flag |= 0b100 // here we set the last page's eos to true
-			// }
 			const last_page_idx = stream_pages.length - 1
 			all_pages.push(...stream_pages.map(
 				(partial_page, page_idx): OggPage_type => {
@@ -200,123 +189,14 @@ export class AllStreamPages extends PureStep<BinaryOutput<OggPage_type[]>, AllSt
 }
 
 
-
-/*
-export class StreamPages extends BinaryArrayStep<OggPage> {
-	constructor() {
-		super(new OggPage())
-	}
-	forward(input: BinaryInput): BinaryOutput<OggPage_type[]> {
-		const
-			last_page_bitmask = 0b100,
-			{ bin, pos } = input,
-			bin_length = bin.length,
-			all_pages: OggPage_type[] = []
-		let bytelength = 0
-		while (pos + bytelength < bin_length) {
-			const { val: current_page, len: current_page_len } = super.next_forward(bin, pos + bytelength, {})
-			bytelength += current_page_len
-			all_pages.push(current_page)
-			if ((current_page.flag & last_page_bitmask) > 0) {
-				// this is the last page in the entire ogg file. time to end parsing any further
-				break
-			}
-		}
-		return { val: all_pages, len: bytelength }
-	}
-	// TODO: implement backward method. a good one should should ensure that the first and last pages are of the correct kind, and that their bos and eos `flag`s are set correctly
-}
-*/
-
-type Packet = {
-	a: OggStreamPage_type
-}
-
-/** mapping of each {@link OggPage_type.serial_number | `serial_number`s} with its unique {@link StreamPages_type | stream} */
-type StreamPackets_type = Map<number, StreamPages_type>
-
-
-export class PacketPages extends PureStep<BinaryOutput<OggPage_type[]>, OggPage_type[][]> {
-	forward(input: BinaryOutput<OggPage_type[]>): OggPage_type[][] {
-		const
-			continuation_of_previous_packet_bitmask = 0b001,
-			all_flat_pages = input.val,
-			all_packet_pages: Array<OggPage_type[]> = []
-		for (const page of all_flat_pages) {
-			if ((page.flag & continuation_of_previous_packet_bitmask) <= 0) {
-				// this page is a new fresh packet (not a continuation).
-				// so append a new list for this fresh packet inside of `all_packet_pages`.
-				all_packet_pages.push([])
-			}
-			all_packet_pages.at(-1)!.push(page)
-		}
-		return all_packet_pages
-	}
-	// TODO: the input of a robust backward method should be: `input: Omit<BinaryOutput<[Pick<OggPage_type, "granule_position" | "serial_number" | "content">,]>, "len">`
-	// it should also auto split large individual `OggPages` inside of the array into smaller ones that can be packed
-	backward(input: OggPage_type[][]): BinaryOutput<OggPage_type[]> {
-		return {
-			val: input.slice().flat(1),
-			len: 0,
-		}
-	}
-}
-
-
-
 /** general structure of an ogg data stream (which can be a file)
-ogg_file = Array<ogg_stream> and is encoded in flat pages
-ogg_stream = codec_packets and is encoded in flat pages such that `page[0].flag.bos === true && page[-1].flag.eos === true`
-codec_packets = Vorbis | Opus | Flac | Speex | Theora | OggPCM
-Vorbis = [VorbisIdentification_packet, VorbisComment, VorbisSetup, ...Audio_packet[]] // https://www.xiph.org/vorbis/doc/Vorbis_I_spec.html#x1-620004.2.1
-Opus = [OpusHead_packet, OpusTags_packet?, ...Audio_packet[]] // https://datatracker.ietf.org/doc/html/rfc7845.html#section-5
-Flac = [StreamInfo_packet, ...Metadata_packet[], ...Audio_packet[]] // https://www.xiph.org/flac/format.html#stream
-Theora = [...Metadata_packet[], ...Audio_packet] // https://theora.org/doc/libtheora-1.0alpha6/theora_8h.html
-Speex = [SpeexInfo_packet, VorbisComment, ...Audio_packet] // https://speex.org/docs/manual/speex-manual/node8.html
-OggPCM = [OggPCMHeader_packet, VorbisComment, ...Audio_packet] // https://wiki.xiph.org/OggPCM
+ * ogg_file = Array<ogg_stream> and is encoded in flat pages
+ * ogg_stream = codec_packets and is encoded in flat pages such that `page[0].flag.bos === true && page[-1].flag.eos === true`
+ * codec_packets = Vorbis | Opus | Flac | Speex | Theora | OggPCM
+ * Vorbis = [VorbisIdentification_packet, VorbisComment, VorbisSetup, ...Audio_packet[]] // https://www.xiph.org/vorbis/doc/Vorbis_I_spec.html#x1-620004.2.1
+ * Opus = [OpusHead_packet, OpusTags_packet?, ...Audio_packet[]] // https://datatracker.ietf.org/doc/html/rfc7845.html#section-5
+ * Flac = [StreamInfo_packet, ...Metadata_packet[], ...Audio_packet[]] // https://www.xiph.org/flac/format.html#stream
+ * Theora = [...Metadata_packet[], ...Audio_packet] // https://theora.org/doc/libtheora-1.0alpha6/theora_8h.html
+ * Speex = [SpeexInfo_packet, VorbisComment, ...Audio_packet] // https://speex.org/docs/manual/speex-manual/node8.html
+ * OggPCM = [OggPCMHeader_packet, VorbisComment, ...Audio_packet] // https://wiki.xiph.org/OggPCM
 */
-
-
-/** parses the next "bitstream", which is just an array of `OggPage`s that are relevant to a single piece of data isolated.
- * so typically, you'd have one bitstream containing metadata (singer, album art, date, etc...), another containing one music channel's digital signal, etc...
-*/
-// export class OggBitstreamPages extends BinaryArrayStep<OggPage> {
-// 	constructor() {
-// 		super(new OggPage())
-// 	}
-// 	forward(input: BinaryInput): BinaryOutput<OggPage_type[]> {
-// 		const
-// 			continuation_of_previous_stream_bitmask = 0b001,
-// 			last_page_bitmask = 0b100,
-// 			{ bin, pos } = input,
-// 			bin_length = bin.length,
-// 			pages_of_stream: OggPage_type[] = []
-// 		let
-// 			one_page_has_been_parsed = false,
-// 			bytelength = 0
-// 		while (pos + bytelength < bin_length) {
-// 			const { val: current_page, len: current_page_len } = super.next_forward(bin, pos + bytelength, {})
-// 			if (one_page_has_been_parsed && (current_page.flag & continuation_of_previous_stream_bitmask) === 0) {
-// 				// this is page is of the next stream, and not a part of the current stream (which has ended).
-// 				// time to end parsing any further
-// 				break
-// 			}
-// 			one_page_has_been_parsed = true
-// 			bytelength += current_page_len
-// 			pages_of_stream.push(current_page)
-// 			if ((current_page.flag & last_page_bitmask) > 0) {
-// 				// this is the last page in the entire ogg file. time to end parsing any further
-// 				break
-// 			}
-// 		}
-// 		return {
-// 			val: pages_of_stream,
-// 			len: bytelength,
-// 		}
-// 		// TODO: implement backward method. it should auto split large individual `OggPages` inside of the array into smaller ones that can be packed
-// 		// the input of a robust backward method should be: `input: Omit<BinaryOutput<[Pick<OggPage_type, "granule_position" | "serial_number" | "content">,]>, "len">`
-// 	}
-// }
-
-
-

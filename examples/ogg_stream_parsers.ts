@@ -1,8 +1,8 @@
-import { BinaryArrayStep, BinaryRecordStep, BinaryHeaderLengthedStep } from "../src/binary_composition_steps.ts"
-import { BinaryDefaultArgs, BinaryStringStep, BinaryNumberStep, BinaryNumberArrayStep } from "../src/binary_primitive_steps.ts"
-import { StreamPages_type, OggStreamPage_type } from "./ogg_page_parser.ts"
-import { BinaryInput, BinaryOutput, PureStep, LengthedArgs } from "../src/typedefs.ts"
 import { concatBytes } from "https://deno.land/x/kitchensink_ts@v0.7.3/typedbuffer.ts"
+import { BinaryArrayStep, BinaryHeaderLengthedStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
+import { BinaryDefaultArgs, BinaryNumberArrayStep, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
+import { BinaryInput, BinaryOutput, LengthedArgs, PureStep } from "../src/typedefs.ts"
+import { OggStreamPage_type, StreamPages_type } from "./ogg_page_parser.ts"
 
 
 export type Opus_type = {
@@ -88,6 +88,7 @@ class PacketBinary extends PureStep<PacketBinaryInput, PacketBinaryOutput> {
 		}
 	}
 	backward(input: PacketBinaryOutput): PacketBinaryInput {
+		// TODO
 		throw new Error("Method not implemented.")
 	}
 }
@@ -106,6 +107,7 @@ export class OpusStream extends PureStep<StreamPages_type, Opus_type>{
 		}
 	}
 	backward(input: Opus_type): StreamPages_type {
+		// TODO
 		throw new Error("Method not implemented.")
 	}
 }
