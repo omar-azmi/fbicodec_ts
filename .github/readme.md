@@ -78,4 +78,3 @@ Moreover, the compositions form a tree structure that preserves invertibility - 
 
 It also makes diagnosing issues easier - if there is a decoding error, it must be within one of the composed Steps.
 The composition tree narrows down where the issue lies.
-
