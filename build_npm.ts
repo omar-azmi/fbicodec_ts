@@ -39,7 +39,7 @@ await build({
 	scriptModule: false,
 	test: false,
 	mappings: Object.fromEntries(
-		["binder", "builtin_aliases_deps", "lambda", "struct", "typedefs",].map((submodule_path) => {
+		["builtin_aliases_deps", "eightpack", "typedbuffer", "typedefs",].map((submodule_path) => {
 			return [
 				"https://deno.land/x/kitchensink_ts@v0.7.3/" + submodule_path + ".ts",
 				{

@@ -140,8 +140,8 @@ export abstract class PureStep<FROM, TO> extends Step<FROM, TO, never> {
 
 /////// BinaryStep definitions
 
-/** the generic input that goes into a {@link BinaryStep["forward"] | `BinaryStep`}'s forward function. <br>
- * it is also the output of that {@link BinaryStep["backward"] | `BinaryStep`}'s backward function.
+/** the generic input that goes into a {@link BinaryStep.forward | `BinaryStep`'s forward} function. <br>
+ * it is also the output of that {@link BinaryStep.backward | `BinaryStep`'s backward} function.
 */
 export interface BinaryInput<ARGS = any> {
 	/** the input binary data bytes */
@@ -152,8 +152,8 @@ export interface BinaryInput<ARGS = any> {
 	args: ARGS
 }
 
-/** the generic output of a {@link BinaryStep["forward"] | `BinaryStep`}'s forward function. <br>
- * it is also the input of that {@link BinaryStep["backward"] | `BinaryStep`}'s backward function.
+/** the generic output of a {@link BinaryStep.forward | `BinaryStep`'s forward} function. <br>
+ * it is also the input of that {@link BinaryStep.backward | `BinaryStep`'s backward} function.
 */
 export interface BinaryOutput<T> {
 	/** decoded output value */
@@ -179,7 +179,7 @@ export abstract class BinaryStep<
 	LOST = any
 > extends Step<BinaryInput<ARGS>, BinaryOutput<OUT>, LOST> {
 	/** @inheritdoc
-	 * the backward transformation in the `BinaryStep` is defined so that it is not reliant the decoded object's original bytelength {@link BinaryOutput["len"] | `"len"`} member.
+	 * the backward transformation in the `BinaryStep` is defined so that it is not reliant the decoded object's original bytelength {@link BinaryOutput.len | `"len"`} member.
 	*/
 	abstract backward(input: Omit<BinaryOutput<OUT>, "len">): BinaryInput<ARGS>
 }
@@ -194,7 +194,7 @@ export abstract class BinaryStep<
 export abstract class BinaryPureStep<OUT, ARGS = any> extends PureStep<BinaryInput<ARGS>, BinaryOutput<OUT>> implements BinaryStep<OUT, ARGS, never>{
 	declare protected lost: never
 	/** @inheritdoc
-	 * the backward transformation in the `BinaryStep` is defined so that it is not reliant the decoded object's original bytelength {@link BinaryOutput["len"] | `len`} member.
+	 * the backward transformation in the `BinaryStep` is defined so that it is not reliant the decoded object's original bytelength {@link BinaryOutput.len | `len`} member.
 	*/
 	abstract backward(input: Omit<BinaryOutput<OUT>, "len">): BinaryInput<ARGS>
 }

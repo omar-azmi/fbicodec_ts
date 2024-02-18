@@ -6,7 +6,7 @@ import { TemporaryFiles, createNPMFiles, doubleCompileFiles, getDenoJson, mainEn
 
 /** use:
  * - `"/"` for localhost (default if unspecified in `Deno.args`)
- * - `"/experiments_ts/"` for github pages
+ * - `"/fbicodec_ts/"` for github pages
 */
 const site_root = Deno.args[0] ?? "/"
 const docs_output_dir = "./docs/"
