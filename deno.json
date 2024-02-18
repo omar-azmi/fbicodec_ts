@@ -1,9 +1,9 @@
 {
 	"name": "fbicodec_ts",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Forward-Backward-Interfaced general purpose invertible codec library",
 	"author": "Omar Azmi",
-	"license": "Lulz plz don't steal yet",
+	"license": "Anti-Competition License",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/omar-azmi/fbicodec_ts.git"
@@ -30,7 +30,7 @@
 		"build-docs": "deno run -A ./build_docs.ts",
 		"build-npm": "deno run -A ./build_npm.ts",
 		"build-npm-dist": "cd \"./npm/\" && npm run build-dist",
-		"build-examples": "deno run -A ./build_dist.ts \"./examples/png_parser.ts\" && deno run -A ./build_dist.ts \"./examples/tar_parser.ts\"",
+		"build-examples": "deno run -A ./build_dist.ts \"./examples/png_parser.ts\" && deno run -A ./build_dist.ts \"./examples/tar_parser.ts\" && deno run -A ./build_dist.ts \"./examples/ogg_parser.ts\"",
 		"clean": "deno run -A ./clean.ts",
 		"test": "deno test -A ./src/mod.ts && deno test -A ./test/"
 	}

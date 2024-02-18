@@ -1,4 +1,4 @@
-import { COMPILATION_MODE, compilation_mode, concatBytes, number_NEGATIVE_INFINITY } from "./deps.ts"
+import { DEBUG, concatBytes, number_NEGATIVE_INFINITY } from "./deps.ts"
 import { BinaryInput, BinaryLengthedDataPureStep, BinaryOutput, BinaryPureStep, LengthedArgs, ObjectToEntries_Mapped, OptionalNeverKeys, PureStep } from "./typedefs.ts"
 
 
@@ -47,7 +47,7 @@ export class BinaryArrayStep<
 			const { bin, args } = item_step.backward({ val: item })
 			out_bins.push(bin)
 			item_args ??= args
-			if (compilation_mode === COMPILATION_MODE.DEBUG) {
+			if (DEBUG.ASSERT) {
 				for (const key in args) {
 					console.assert(
 						item_args[key] === args[key],
@@ -70,7 +70,7 @@ export class BinaryArrayStep<
 		}
 	}
 	// TODO: create `protected next_backward` method, but I can't think of a way to also include the
-	// `if (compilation_mode === COMPILATION_MODE.DEBUG)` block in it, without making it look like an eyesore.
+	// `if (DEBUG.ASSERT)` block in it, without making it look like an eyesore.
 }
 
 

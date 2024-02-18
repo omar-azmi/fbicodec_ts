@@ -1,90 +1,26 @@
 export * from "https://deno.land/x/kitchensink_ts@v0.7.3/builtin_aliases.ts"
-export { Crc32 } from "https://deno.land/x/kitchensink_ts@v0.7.3/crypto.ts"
 export * from "https://deno.land/x/kitchensink_ts@v0.7.3/eightpack.ts"
-export type * from "https://deno.land/x/kitchensink_ts@v0.7.3/mod.ts"
-export * from "https://deno.land/x/kitchensink_ts@v0.7.3/typedbuffer.ts"
+export { concatBytes, concatTyped } from "https://deno.land/x/kitchensink_ts@v0.7.3/typedbuffer.ts"
+export type * from "https://deno.land/x/kitchensink_ts@v0.7.3/typedefs.ts"
 
 
-export const enum COMPILATION_MODE {
-	DEBUG,
-	PRODUCTION,
-	MINIFY,
-}
-export const compilation_mode: COMPILATION_MODE = COMPILATION_MODE.DEBUG as const
-
-
-/*
-type EntriesToKeys<T extends [string, any][]> = T[number][0]
-type EntriesToValues<T extends [string, any][]> = T[number][1]
-type ObjectFromEntries<T extends [string, any][]> = {
-	[K in EntriesToKeys<T>]: Extract<T[number], [K, any]>[1]
-}
-type ObjectToEntries<OBJ> = {
-	[K in keyof OBJ as number]: [K, OBJ[K]]
-}[number]
-type ObjectToEntries_Mapped_FN1<OBJ> = {
-	[K in keyof OBJ as number]: [K, FN1<OBJ[K]>]
-}[number]
-
-
-
-type arr = [elem1: ["hello", string], elem2: ["world", number], ["letsgoo", { nyaa: string, pantsu: { kill: 5, your: 33, self: symbol } }]]
-type ARR = ObjectFromEntries<arr>
-type arr_reconstruction = ObjectToEntries<ARR>
-
-type FN1<T> = () => { val: T, len: number }
-type FN2<FNS extends Array<[string, () => { val: any }]>> = (...fns: FNS) => { val: ObjectFromEntries<arr>, len: number }
-type FN3<
-	FNS extends Array<[key: string, value: FN1<any>]>,
-	OBJ = { [K in EntriesToKeys<FNS>]: ReturnType<ObjectFromEntries<FNS>[K]>["val"] }
-> = (...fns: FNS) => { val: OBJ, len: number }
-type FN4<
-	OBJ,
-	FNS extends Array<ObjectToEntries_Mapped_FN1<OBJ>> = Array<ObjectToEntries_Mapped_FN1<OBJ>>
-> = (...fns: FNS) => { val: OBJ, len: number }
-type FN5<
-	OBJ,
-	FNS extends Array<ObjectToEntries_Mapped_FN1<OBJ>> = Array<ObjectToEntries_Mapped_FN1<OBJ>>
-> = (fns: FNS) => { val: OBJ, len: number }
-
-declare const hello_fn: FN1<string>
-declare const world_fn: FN1<number>
-declare const letsgoo_fn: FN1<{ nyaa: string, pantsu: { kill: 5, your: 33, self: symbol } }>
-
-declare const arr_fn2: FN2<[["hello", typeof hello_fn], ["world", typeof world_fn], ["letsgoo", typeof letsgoo_fn]]>
-const arr_rec2 = arr_fn2(["hello", hello_fn], ["world", world_fn], ["letsgoo", letsgoo_fn]).val
-
-declare const arr_fn3: FN3<
-	[["hello", typeof hello_fn], ["world", typeof world_fn], ["letsgoo", typeof letsgoo_fn]]
->
-const arr_rec3 = arr_fn3(["hello", hello_fn], ["world", world_fn], ["letsgoo", letsgoo_fn]).val
-arr_rec3
-
-declare const arr_fn4: FN4<ARR>
-const arr_rec4 = arr_fn4(["hello", hello_fn], ["world", world_fn], ["letsgoo", letsgoo_fn]).val
-arr_rec4
-
-declare const arr_fn5: FN5<ARR>
-const arr_rec5 = arr_fn5([["hello", hello_fn], ["world", world_fn], ["letsgoo", letsgoo_fn]]).val
-arr_rec5
-
-
-
-
-// Define a URI for each type constructor
-interface URItoKind<A = "none"> {
-	"none": A
-	"MyMap": FN1<A>
-	// Add other mappings here
+export const enum DEBUG {
+	LOG = 0,
+	ASSERT = 0,
+	PRODUCTION = 1,
+	MINIFY = 1,
 }
 
-// Define the HKT
-type HKT<URI extends keyof URItoKind<any>, A> = URItoKind<A>[URI]
-
-// Define the ObjectToMappedEntries type
-type ObjectToMappedEntries<OBJ, URI extends keyof URItoKind<any> = "none"> = {
-	[K in keyof OBJ as number]: [K, HKT<URI, OBJ[K]>]
-}[number]
-
-declare const AAA: ObjectToMappedEntries<ARR>
-*/
+// TODO: document each and every binary step out there
+// DONE: implement "bytes" primitive binary step (i.e `BinaryPureStep<Uint8Array, LengthedArgs>`)
+// TODO: start thinking about conditional binary steps, such as the ENUM-bytes conditional one
+// TODO: consider renaming `BinaryRecordStep` to `BinaryInterfaceStep` or `BinarySchemaStep`, as the word "Record" would imply something like a dictionary, where both the keys and values are encoded in binary.
+// NOTPLANNED, turned out to be a bad idea. code inference with schema as first argument is far better than what was suggested here:
+//       consider changing `BinaryRecordStep`'s generic signature from `<RECORD_SCHEMA, ARGS, ENTRY_TYPE>` to `<ENTRIES, ARGS, RECORD_SCHEMA>`, where `RECORD_SCHEMA` would be generated through type manipulation of `ENTRIES`, and so will `ARGS`.
+//       but if someone would like to go with a certain schema, irrespective of the entries and args types, they'd declare `<any, any, MYSCHEMA>`
+// DONE: consider removing `BinaryRecordStep`'s `args.entry_args`, so that it is at the top level. this will actually make your design more compatible/consistent with `BinaryArrayStep` and `BinaryHeaderLengthedStep`,
+//       as they too use a single nestedness for their composition components, rather than a nestedness of two, the way it currently is with `BinaryRecordStep`'s args interface.
+// TODO: remove Higher-Order-Type (`HOTKind*`) in `typedefs.ts`, as there's literally just a single mapping that we utilize in the codebase.
+// TODO: add string-to-number codec, json codec, and a string-to-keyvalue pair (separated by custom delimiter)
+// TODO: re-export `kitchensink_ts/eightpack.ts` in `mod.ts`, as library users will probably benift from those utility encoder and decoder functions.
+//       although, I wouldn't want anyone confusing it with this library's core functionality (which is the `Step` interface)

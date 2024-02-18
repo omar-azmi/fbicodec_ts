@@ -1,7 +1,8 @@
+import { Crc32 } from "https://deno.land/x/kitchensink_ts@v0.7.3/crypto.ts"
 import { FileParser } from "https://deno.land/x/kitchensink_ts@v0.7.3/devdebug.ts"
 import { ArrayArgs, BinaryArrayStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
 import { BinaryBytesStep, BinaryDefaultArgs, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
-import { Crc32, concatBytes } from "../src/deps.ts"
+import { concatBytes } from "../src/deps.ts"
 import { BinaryInput, BinaryOutput, PureStep } from "../src/typedefs.ts"
 import { ChunkData_schema, IHDR_step, PLTE_schema, PLTE_step, cHRM_step, gAMA_step, hIST_schema, hIST_step, pHYs_step, tEXt_step, tIME_step, zTXt_step } from "./png_chunk_parsers.ts"
 

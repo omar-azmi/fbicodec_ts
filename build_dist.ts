@@ -7,12 +7,12 @@ import { doubleCompileFiles } from "./build_tools.ts"
  * - `"./examples/${num}/${script}.ts"` for compiling an example
 */
 const
-	compile_file = Deno.args[0] ?? "./src/main.ts",
+	compile_file = Deno.args[0] ?? "./src/mod.ts",
 	out_dir = "./dist/"
 
 const output_files = await doubleCompileFiles(compile_file, out_dir,
 	{},
-	{ minify: false },
+	{},
 )
 
 await Promise.all(output_files.map(

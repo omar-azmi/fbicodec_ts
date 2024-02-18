@@ -24,14 +24,14 @@ The main abstractions are:
 - `Step` - encodes `forward` and decodes `backward` between a source and target type.
 - `Binarystep` - a `Step` for encoding/decoding binary data.
 
-To work with binary data of primitive types, such as: numbers, strings, bytes etc..., you can use the the `BinaryPureStep`s inside the file [`binary_primitive_steps.ts`](./src/binary_primitive_steps.ts).
+To work with binary data of primitive types, such as: numbers, strings, bytes etc..., you can use the the `BinaryPureStep`s inside the file [`binary_primitive_steps.ts`](/src/binary_primitive_steps.ts).
 - `BinaryNumberStep` - supports signed/unsigned integers of 8, 16, 32 and 64 bits, and floats of 32 and 64 bits, in both little-endian and big-endian formats.
 - `BinaryStringStep` - for strings with varying lengths (based on the `args.length` parameter).
 - `BinaryCStringStep` - for NUL (`"\x00"`) terminated strings.
 - `BinaryBytesStep` - for sequence of bytes (based on the `args.length` parameter).
 - `BinaryNumberArrayStep` - for numeric array of numbers (based on the `args.length` parameter).
 
-To work with binary data of composite types, such as: records, arrays, sequences etc..., you can use the the `BinaryPureStep`s inside the file [`binary_composition_steps`](./src/binary_composition_steps.ts).
+To work with binary data of composite types, such as: records, arrays, sequences etc..., you can use the the `BinaryPureStep`s inside the file [`binary_composition_steps`](/src/binary_composition_steps.ts).
 - `BinaryRecordStep` - encodes a record with named fields, when provided with a sequence of `Steps` for each field.
 - `BinaryArrayStep` - encodes an array of items, when provided with a single `Step` for the item type.
 - `SequentialSteps` - chains multiple `Step`s.

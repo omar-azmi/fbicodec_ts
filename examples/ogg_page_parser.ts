@@ -38,7 +38,7 @@ export type OggPage_type = {
 	serial_number: number
 	/** `type: "u4l"` <br> this is a monotonically increasing field within each logical bitstream. the first page is 0, the second 1, etc... */
 	page_number: number
-	/** `type: "u4l"` <br> crc32 checksum of the data in the entire page. read specifics on wikipedia "https://en.wikipedia.org/wiki/Ogg#Metadata:~:text=has%20been%20lost.-,Checksum,-%E2%80%93%2032%20bits" */
+	/** `type: "u4l"` <br> checksum of the data in the entire page. read specifics on wikipedia "https://en.wikipedia.org/wiki/Ogg#Metadata:~:text=has%20been%20lost.-,Checksum,-%E2%80%93%2032%20bits" */
 	checksum: number
 	/** `type: "u1"` <br> indicates the number of segments that exist in this page. it also specifies the size of the `segment_table` u1_array that follows. I think this value should always at least be `1` */
 	// segment_table_length: number
