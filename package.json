@@ -1,0 +1,47 @@
+{
+  "module": "./esm/mod.js",
+  "name": "fbicodec_ts",
+  "version": "0.1.1",
+  "description": "Forward-Backward-Interfaced general purpose invertible codec library",
+  "author": "Omar Azmi",
+  "license": "Anti-Competition License",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omar-azmi/fbicodec_ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omar-azmi/fbicodec_ts/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "typescript": "^5.0.0",
+    "esbuild": "^0.17.19"
+  },
+  "scripts": {
+    "build-dist": "npm run build-esm && npm run build-esm-minify && npm run build-iife && npm run build-iife-minify",
+    "build-esm": "npx esbuild \"./src/mod.ts\" --bundle --format=esm --outfile=\"./dist/fbicodec_ts.esm.js\"",
+    "build-esm-minify": "npx esbuild \"./src/mod.ts\" --bundle --minify --format=esm --outfile=\"./dist/fbicodec_ts.esm.min.js\"",
+    "build-iife": "npx esbuild \"./src/mod.ts\" --bundle --format=iife --outfile=\"./dist/fbicodec_ts.iife.js\"",
+    "build-iife-minify": "npx esbuild \"./src/mod.ts\" --bundle --minify --format=iife --outfile=\"./dist/fbicodec_ts.iife.min.js\""
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/mod.js"
+    },
+    "./binary_composition_steps": {
+      "import": "./esm/binary_composition_steps.js"
+    },
+    "./binary_conditional_steps": {
+      "import": "./esm/binary_conditional_steps.js"
+    },
+    "./binary_primitive_steps": {
+      "import": "./esm/binary_primitive_steps.js"
+    },
+    "./typedefs": {
+      "import": "./esm/typedefs.js"
+    }
+  },
+  "dependencies": {
+    "kitchensink_ts": "^v0.7.3"
+  }
+}
