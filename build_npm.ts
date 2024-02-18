@@ -38,6 +38,18 @@ await build({
 	esModule: true,
 	scriptModule: false,
 	test: false,
+	mappings: Object.fromEntries(
+		["binder", "builtin_aliases_deps", "lambda", "struct", "typedefs",].map((submodule_path) => {
+			return [
+				"https://deno.land/x/kitchensink_ts@v0.7.3/" + submodule_path + ".ts",
+				{
+					name: "kitchensink_ts",
+					version: "^v0.7.3",
+					subPath: submodule_path,
+				}
+			]
+		})
+	)
 })
 
 // copy other files
