@@ -12,5 +12,5 @@
 /deno.d.ts
 
 # automatic file clones
-/.github/readme.md
-/license.md
+/src/readme.md
+/src/license.md

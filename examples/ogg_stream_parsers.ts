@@ -1,4 +1,4 @@
-import { concatBytes } from "https://deno.land/x/kitchensink_ts@v0.7.3/typedbuffer.ts"
+import { concatBytes } from "jsr:@oazmi/kitchensink@0.7.5/typedbuffer"
 import { BinaryArrayStep, BinaryHeaderLengthedStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
 import { BinaryDefaultArgs, BinaryNumberArrayStep, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
 import { BinaryInput, BinaryOutput, LengthedArgs, PureStep } from "../src/typedefs.ts"

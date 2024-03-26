@@ -1,7 +1,7 @@
-export * from "https://deno.land/x/kitchensink_ts@v0.7.3/builtin_aliases_deps.ts"
-export * from "https://deno.land/x/kitchensink_ts@v0.7.3/eightpack.ts"
-export { concatBytes, concatTyped } from "https://deno.land/x/kitchensink_ts@v0.7.3/typedbuffer.ts"
-export type * from "https://deno.land/x/kitchensink_ts@v0.7.3/typedefs.ts"
+export * from "jsr:@oazmi/kitchensink@0.7.5/builtin_aliases_deps"
+export * from "jsr:@oazmi/kitchensink@0.7.5/eightpack"
+export { concatBytes, concatTyped } from "jsr:@oazmi/kitchensink@0.7.5/typedbuffer"
+export type * from "jsr:@oazmi/kitchensink@0.7.5/typedefs"
 
 
 export const enum DEBUG {
@@ -10,12 +10,6 @@ export const enum DEBUG {
 	PRODUCTION = 1,
 	MINIFY = 1,
 }
-
-// TODO: add these to `kitchensink_ts/builtin_aliases_deps.ts` . I am tired of redefining it in half of my repos
-export const {
-	isFinite: number_isFinite,
-	parseInt: number_parseInt,
-} = Number
 
 export const {
 	ceil: math_ceil,

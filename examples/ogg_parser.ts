@@ -1,4 +1,4 @@
-import { FileParser } from "https://deno.land/x/kitchensink_ts@v0.7.3/devdebug.ts"
+import { FileParser } from "jsr:@oazmi/kitchensink@0.7.5/devdebug"
 import { AllOggPages, AllStreamPages } from "./ogg_page_parser.ts"
 import { OpusStream, Opus_type } from "./ogg_stream_parsers.ts"
 

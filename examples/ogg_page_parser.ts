@@ -1,4 +1,4 @@
-import { sum } from "https://deno.land/x/kitchensink_ts@v0.7.3/numericmethods.ts"
+import { sum } from "jsr:@oazmi/kitchensink@0.7.5/numericmethods"
 import { BinaryArrayStep, BinaryHeaderLengthedStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
 import { BinaryBytesStep, BinaryDefaultArgs, BinaryNumberArrayStep, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
 import { BinaryInput, BinaryOutput, PureStep } from "../src/typedefs.ts"

@@ -1,5 +1,5 @@
-import { Crc32 } from "https://deno.land/x/kitchensink_ts@v0.7.3/crypto.ts"
-import { FileParser } from "https://deno.land/x/kitchensink_ts@v0.7.3/devdebug.ts"
+import { Crc32 } from "jsr:@oazmi/kitchensink@0.7.5/crypto"
+import { FileParser } from "jsr:@oazmi/kitchensink@0.7.5/devdebug"
 import { ArrayArgs, BinaryArrayStep, BinaryRecordStep } from "../src/binary_composition_steps.ts"
 import { BinaryBytesStep, BinaryDefaultArgs, BinaryNumberStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
 import { concatBytes } from "../src/deps.ts"

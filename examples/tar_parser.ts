@@ -1,4 +1,4 @@
-import { FileParser } from "https://deno.land/x/kitchensink_ts@v0.7.3/devdebug.ts"
+import { FileParser } from "jsr:@oazmi/kitchensink@0.7.5/devdebug"
 import { BinaryArrayStep, BinaryRecordStep, SequentialSteps } from "../src/binary_composition_steps.ts"
 import { BinaryBytesStep, BinaryDefaultArgs, BinaryInputWrapStep, BinaryOutputUnwrapStep, BinaryStringStep } from "../src/binary_primitive_steps.ts"
 import { concatBytes, math_ceil } from "../src/deps.ts"
